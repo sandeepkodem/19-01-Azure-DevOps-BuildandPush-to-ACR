@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: deployment
+metadata:
+  name: app1-nginx-deployment
+  labels:
+    app: app1-nginx
+
+spec:
+  replicas: 1
+    selector: 
+      matchLabels:
+        app: app1-nginx
+  template:
+    metadata:
+      labels:
+        app: app1-nginx
+    spec:
+      containers:
+        - name: app1-nginx
+          image: aksdevopacr.azurecr.io/custom2aksnginxapp1
+          ports: 
+            - containerPort: 80
+
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: load-balancer-service-app1
+  labels: 
+    app: app1-nginx
+spec:
+  type: loadBalancer
+  selector:
+    app: app1-nginx
+  ports:
+    - port: 80
+     targetPort: 80
